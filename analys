@@ -1,0 +1,24 @@
+screen
+--------------------
+icon	|	name 							- 20dp
+		|	subname						- 15dp
+		|	info(category and etc)	- 12dp
+--------------------
+Copy magnet 	|		Download
+to buffer			|		torrent
+--------------------
+Seed | peer | size | genre(or something else)
+--------------------
+mark
+--------------------
+Description(synopsis, show first sentence or 50 symbols)
+--------------------
+Other info
+--------------------
+Bounded torrents
+--------------------
+Files list
+--------------------
+Comments(Show first 3 comments)
+--------------------
+Bookmark | Add comment | 

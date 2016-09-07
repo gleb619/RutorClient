@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="primary">#E60000</color>
+    <color name="primary_dark">#B30000</color>
+    <color name="primary_accent">#CD0000</color>
+
+    <color name="main_color">#E60000</color>
+    <color name="groups_color">#FCD317</color>
+    <color name="groups_text_color">#019F00</color>
+    <color name="main_text_inverted_color">#FFFFFF</color>
+    <color name="main_text_color">#1A1A1A</color>
+    <color name="info_text_color">#4D4D4D</color>
+    <color name="other_text_color">#808080</color>
+
+    <color name="background_main_color">#80000000</color>
+    <color name="background_base_color">#FFFFFF</color>
+    <color name="background_dark_color">#CC000000</color>
+
+    <color name="divider_main_color">#4D000000</color>
+
+    <color name="seed_color">#008000</color>
+    <color name="peer_color">#8B0000</color>
+
+    <color name="row_even_color">#EEF3F5</color>
+    <color name="row_odd_color">#FFFFFF</color>
+
+    <color name="error_color">#FF1A1A</color>
+    <color name="active_element">#B30000</color>
+
+    <color name="step_1">#E60000</color>
+    <color name="step_2">#fff93c</color>
+    <color name="step_3">#fddb34</color>
+    <color name="step_4">#019F00</color>
+    <color name="step_5">#008deb</color>
+
+    <drawable name="row_even_color">#EEF3F5</drawable>
+    <drawable name="row_odd_color">#FFFFFF</drawable>
+
+    <drawable name="dark_background">#4D4D4D</drawable>
+    <drawable name="green_background">#00FF00</drawable>
+</resources>

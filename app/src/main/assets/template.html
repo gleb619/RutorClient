@@ -1,0 +1,64 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>%s</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway:400,300,600"
+          type="text/css">
+    <link rel="stylesheet" href="../css/normalize.css" type="text/css">
+    <link rel="stylesheet" href="../css/skeleton.css" type="text/css">
+    <link rel="stylesheet" href="../css/custom.css" type="text/css">
+    <script type="text/javascript"
+            src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/color-thief.min.js"></script>
+    <script type="text/javascript" src="../js/custom.js"></script>
+</head>
+<body>
+<div class="section main-content">
+    <div class="container">
+        %s
+    </div>
+</div>
+<div class="section distribution-details c-border-color-0">
+    <h3 class="section-heading">Детали</h3>
+    <div class="container">
+        <table id="details">
+            <tbody>
+            %s
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="section bounded-details c-border-color-1">
+    <div class="container">
+        <h3 class="section-heading">Связанные раздачи</h3>
+        %s
+    </div>
+</div>
+<div class="section files-details c-border-color-2 light-background-color">
+    <div class="container">
+        <h3 class="section-heading">Список файлов</h3>
+        <a id="%s" class="button dark-border-color dark-color" onclick="loadFiles($(this))">Показать/Скрыть
+            файлы</a>
+        <table id="files" class="hide">
+            <tbody id="filelist">
+            <tr>
+                <td colspan="2">
+                    Происходит загрузка списка файлов...
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="section comments-details c-border-color-3">
+    <div class="container">
+        <h3 class="section-heading">Комментарии</h3>
+        <!--//TODO: write shadow for quote-->
+        %s
+    </div>
+</div>
+</body>
+</html>
