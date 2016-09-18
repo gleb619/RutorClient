@@ -16,9 +16,12 @@
     <string name="main_page_unsorted_fragment">Main unsorted</string>
     <string name="http_service">Http service</string>
 
+    <string name="instructions_for_interfacing_devices">1) Скачайте клиент на свой локальный компьютер\n\n2) Запустите скаченный клиент\n\n3) Введите следующий номер в текстовае поле и нажмите кнопку \"Save\"\n\n4) Перейдите на любую раздачу и нажмите на к нопку с иконкой \"Загрузка\"\n\n\n\n\n\n%s</string>
+
     <string-array name="drawer_menu_options">
         <item>Главная(Вперемешку)</item>
         <item>Главная(Разделенные по категориям)</item>
+        <item>Сопряжение устройств</item>
         <!--
         <item>Топ</item>
         <item>Категории</item>

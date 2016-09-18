@@ -8,6 +8,8 @@ import com.squareup.picasso.Picasso;
 
 import org.rutor.team619.rutorclient.model.settings.ProjectSettings;
 import org.rutor.team619.rutorclient.resource.RuTorRepository;
+import org.rutor.team619.rutorclient.service.CommandsExecutor;
+import org.rutor.team619.rutorclient.service.DeviceInformationService;
 import org.rutor.team619.rutorclient.service.HttpServer;
 import org.rutor.team619.rutorclient.service.ImageDownloader;
 import org.rutor.team619.rutorclient.service.WebServer;
@@ -22,6 +24,7 @@ import org.rutor.team619.rutorclient.service.helper.FolderHelper;
 import org.rutor.team619.rutorclient.service.helper.HelperRegister;
 import org.rutor.team619.rutorclient.util.AppUtil;
 import org.rutor.team619.rutorclient.view.fragment.DetailPageFragment;
+import org.rutor.team619.rutorclient.view.fragment.DeviceIdentificationFragment;
 import org.rutor.team619.rutorclient.view.fragment.MainPageGroupedFragment;
 import org.rutor.team619.rutorclient.view.fragment.MainPagePlainFragment;
 
@@ -44,6 +47,7 @@ import retrofit.client.OkClient;
  */
 @Module(
         injects = {
+                DeviceIdentificationFragment.class,
                 MainPageGroupedFragment.class,
                 MainPagePlainFragment.class,
                 DetailPageFragment.class,
@@ -121,8 +125,20 @@ public class MainModule implements Serializable {
     }
 
     @Provides
-    public ImageDownloader provideImageDownloder(ProjectSettings project, Context context) {
-        return new ImageDownloader(project.getUrl(), context.getResources());
+    @Singleton
+    public CommandsExecutor provideCommandsExecutor() {
+        return new CommandsExecutor();
+    }
+
+    @Provides
+    @Singleton
+    public DeviceInformationService provideDeviceInformationService(Context context) {
+        return new DeviceInformationService(context);
+    }
+
+    @Provides
+    public ImageDownloader provideImageDownloder(ProjectSettings project, Context context, CommandsExecutor commandsExecutor, DeviceInformationService deviceInformationService) {
+        return new ImageDownloader(project.getUrl(), context.getResources(), commandsExecutor, deviceInformationService);
     }
 
     @Provides

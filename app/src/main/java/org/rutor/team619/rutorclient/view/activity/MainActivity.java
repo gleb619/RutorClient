@@ -26,6 +26,7 @@ import org.rutor.team619.rutorclient.util.Objects;
 import org.rutor.team619.rutorclient.view.activity.core.DefaultActivity;
 import org.rutor.team619.rutorclient.view.fragment.BugReportFragment;
 import org.rutor.team619.rutorclient.view.fragment.DetailPageFragment;
+import org.rutor.team619.rutorclient.view.fragment.DeviceIdentificationFragment;
 import org.rutor.team619.rutorclient.view.fragment.MainPageGroupedFragment;
 import org.rutor.team619.rutorclient.view.fragment.MainPagePlainFragment;
 
@@ -278,6 +279,9 @@ public class MainActivity extends DefaultActivity {
                 break;
             case MAIN_PAGE_GROUPED:
                 fragment = new MainPageGroupedFragment();
+                break;
+            case DEVICE_INFORMATION:
+                fragment = new DeviceIdentificationFragment();
                 break;
             default:
                 break;

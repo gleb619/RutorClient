@@ -6,6 +6,7 @@ import android.content.Context;
 import org.rutor.team619.rutorclient.service.HttpServer;
 import org.rutor.team619.rutorclient.view.activity.MainActivity;
 import org.rutor.team619.rutorclient.view.fragment.DetailPageFragment;
+import org.rutor.team619.rutorclient.view.fragment.DeviceIdentificationFragment;
 import org.rutor.team619.rutorclient.view.fragment.MainPageGroupedFragment;
 import org.rutor.team619.rutorclient.view.fragment.MainPagePlainFragment;
 
@@ -26,6 +27,7 @@ import dagger.Provides;
                 MainPageGroupedFragment.class,
                 MainPagePlainFragment.class,
                 DetailPageFragment.class,
+                DeviceIdentificationFragment.class,
                 HttpServer.class,
                 MainApp.class
         }

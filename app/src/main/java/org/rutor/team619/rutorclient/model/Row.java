@@ -21,7 +21,6 @@ public class Row implements DefaultEntity {
 
     public Row() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     public Row(int id, String creationDate, Caption caption, String size,

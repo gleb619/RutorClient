@@ -6,6 +6,10 @@ $(document).ready(function () {
         clearTimeout(timer);
         timer = null;
     }, 500);
+
+    $("#floating-button").click(function() {
+        RutorClient.remoteDownload($('meta[name=origin]').attr("content"));
+    });
 });
 
 function loadMainColor() {

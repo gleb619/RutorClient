@@ -98,10 +98,12 @@ public class DetailPageConverter extends DefaultConverter implements Converter<D
             String H1header = htmlBody.select(Selectors.HEADER).text();
             Element mainContent = htmlBody.select(Selectors.CONTENT).first();
 
-            String id = Integer.toString(parseId(Optional.ofNullable(htmlBody.select(Selectors.TOPIC_ID).first())
-                    .orElse(BlankElement.newOne()).attr("href").toString()));
+            Element mainLink = Optional.ofNullable(htmlBody.select(Selectors.TOPIC_ID).first())
+                    .orElse(BlankElement.newOne());
+            String id = Integer.toString(parseId(mainLink.attr("href").toString()));
+            String link = mainLink.attr("href");
             Element table = mainContent.select(Selectors.MAIN_TABLE).first();
-            String topicSpecification = Optional.ofNullable(table.select(Selectors.TOPIC_DETALIZATION)
+            String topicSpecification = Optional.ofNullable(table.select(Selectors.TOPIC_DETAILS)
                     .first()).orElse(BlankElement.newOne()).toString();
             Element boundedContentElement = Optional.ofNullable(table.select(Selectors.TOPIC_BOUNDED).first())
                     .orElse(BlankElement.newOne());
@@ -124,6 +126,7 @@ public class DetailPageConverter extends DefaultConverter implements Converter<D
 
             content = String.format(template,
                     H1header,
+                    link,
                     topicSpecification,
                     distributionDetails,
                     boundedContent,
@@ -202,7 +205,7 @@ public class DetailPageConverter extends DefaultConverter implements Converter<D
         String MAIN_TABLE = "#details > tbody";
         String TR = "tr";
         String TOPIC_ID = "#download > a:nth-child(2)";
-        String TOPIC_DETALIZATION = "tr:nth-child(1) > td:nth-child(2)";
+        String TOPIC_DETAILS = "tr:nth-child(1) > td:nth-child(2)";
         String TOPIC_BOUNDED = "tr:nth-child(11)";
         String TOPIC_BOUNDED_DETAILS = "#index > fieldset > table > tbody > tr";
         String TOPIC_FILE = "tr:nth-child(12)";

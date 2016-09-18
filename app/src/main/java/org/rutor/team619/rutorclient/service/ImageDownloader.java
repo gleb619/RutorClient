@@ -44,12 +44,16 @@ public class ImageDownloader implements Clearable {
     public final WebAppInterface webAppInterface;
     private final String address;
     private final Resources resources;
+    private final CommandsExecutor commandsExecutor;
+    private final DeviceInformationService deviceInformationService;
 
     private transient Toolbar toolbar;
     private transient Window window;
     private transient WebView view;
 
-    public ImageDownloader(String address, Resources resources) {
+    public ImageDownloader(String address, Resources resources, CommandsExecutor commandsExecutor, DeviceInformationService deviceInformationService) {
+        this.commandsExecutor = commandsExecutor;
+        this.deviceInformationService = deviceInformationService;
         this.webAppInterface = new WebAppInterface();
         this.address = address;
         this.resources = resources;
@@ -311,6 +315,11 @@ public class ImageDownloader implements Clearable {
         @JavascriptInterface
         public void onWarning(String message) {
             Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+        }
+
+        @JavascriptInterface
+        public void remoteDownload(String url) {
+            commandsExecutor.sendCommand(deviceInformationService.id(), url);
         }
 
     }

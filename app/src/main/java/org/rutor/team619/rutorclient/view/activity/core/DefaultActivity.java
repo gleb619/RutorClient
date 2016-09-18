@@ -56,6 +56,7 @@ public abstract class DefaultActivity extends AppCompatActivity {
 
         BUG_REPORT(-2),
         DETAIL_PAGE(-1),
+        DEVICE_INFORMATION(2),
         MAIN_PAGE_GROUPED(1),
         MAIN_PAGE_PLAIN(0);
 
@@ -75,6 +76,8 @@ public abstract class DefaultActivity extends AppCompatActivity {
                     return MAIN_PAGE_PLAIN;
                 case 1:
                     return MAIN_PAGE_GROUPED;
+                case 2:
+                    return DEVICE_INFORMATION;
             }
 
             throw new IllegalArgumentException("Can't work with this id: " + id);
