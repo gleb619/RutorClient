@@ -6,6 +6,7 @@ import com.annimon.stream.Stream;
 import org.jsoup.nodes.Document;
 import org.rutor.team619.rutorclient.model.MainPlainPage;
 import org.rutor.team619.rutorclient.service.converter.core.Converter;
+import org.rutor.team619.rutorclient.service.storage.Storage;
 import org.rutor.team619.rutorclient.util.Objects;
 
 import java.io.Serializable;
@@ -29,6 +30,16 @@ public class MainPagePlainConverter extends RowConverter implements Converter<Ma
     @Override
     public Class<MainPlainPage> support() {
         return MainPlainPage.class;
+    }
+
+    @Override
+    public Storage<Byte, String> storage() {
+        return null;
+    }
+
+    @Override
+    public String getText() {
+        return null;
     }
 
     /* =================== */

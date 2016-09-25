@@ -5,21 +5,25 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import org.rutor.team619.rutorclient.R;
 import org.rutor.team619.rutorclient.app.MainApp;
-import org.rutor.team619.rutorclient.model.settings.ProjectSettings;
+import org.rutor.team619.rutorclient.model.settings.Settings;
 import org.rutor.team619.rutorclient.service.WebServer;
 import org.rutor.team619.rutorclient.util.AppUtil;
 import org.rutor.team619.rutorclient.util.Objects;
@@ -41,6 +45,8 @@ import dagger.ObjectGraph;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import static org.rutor.team619.rutorclient.model.settings.Settings.Code.HIGH_PERFORMANCE_MODE;
+
 public class MainActivity extends DefaultActivity {
 
     @Inject
@@ -48,7 +54,7 @@ public class MainActivity extends DefaultActivity {
     @Inject
     AppUtil appUtil;
     @Inject
-    ProjectSettings project;
+    Settings project;
     @Inject
     WebServer server;
 
@@ -60,6 +66,8 @@ public class MainActivity extends DefaultActivity {
     ListView menuListView;
     @Bind(R.id.main_toolbar)
     Toolbar toolbar;
+    @Bind(R.id.progress_bar)
+    ProgressBar progressBar;
 
     private ActionBarDrawerToggle drawerToggle;
     private ListAdapter adapter;
@@ -72,10 +80,19 @@ public class MainActivity extends DefaultActivity {
             super.onAfterCreate();
 
             if (savedInstanceState == null) {
-                selectItem(Fragments.MAIN_PAGE_PLAIN);
+                selectFirst(Fragments.MAIN_PAGE_PLAIN);
             }
 
 //        startService(new Intent(mainApp, HttpServer.class));
+
+            progressBar.setScaleY(1.3f);
+            progressBar.setScaleX(1.3f);
+
+            if (Boolean.TRUE.toString().equals(project.value(HIGH_PERFORMANCE_MODE))) {
+                getWindow().setFlags(
+                        WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                        WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+            }
 
             appUtil.test()
                     .subscribeOn(Schedulers.io())
@@ -116,14 +133,12 @@ public class MainActivity extends DefaultActivity {
     //TODO: Repair http server, move it to intentService.
     protected void onResume() {
         super.onResume();
-
         try {
             if (server != null) {
                 server.start();
             }
         } catch (IOException e) {
             Log.e(TAG, "ERROR: ", e);
-            server = null;
         }
     }
 
@@ -131,10 +146,8 @@ public class MainActivity extends DefaultActivity {
     //TODO: Repair http server, move it to intentService.
     protected void onPause() {
         super.onPause();
-
         if (server != null) {
             server.stop();
-            server = null;
         }
     }
 
@@ -147,13 +160,7 @@ public class MainActivity extends DefaultActivity {
 //            getSupportActionBar().setDisplayUseLogoEnabled(true);
         }
         if (drawerToggle == null) {
-            drawerToggle = new ActionBarDrawerToggle(
-                    this,
-                    drawerLayout,
-                    toolbar,
-                    R.string.drawer_open,
-                    R.string.drawer_close
-            ) {
+            drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
 
                 public void onDrawerClosed(View view) {
 //                    supportInvalidateOptionsMenu();
@@ -243,9 +250,18 @@ public class MainActivity extends DefaultActivity {
         }
     }
 
+    public void selectFirst(Fragments type) {
+        try {
+            selectItemData(type, null, true);
+        } catch (Exception e) {
+            Log.e(TAG, "ERROR:", e);
+        }
+    }
+
+
     public void selectItem(Fragments type) {
         try {
-            selectItemData(type, null);
+            selectItemData(type, null, false);
         } catch (Exception e) {
             Log.e(TAG, "ERROR:", e);
         }
@@ -253,13 +269,13 @@ public class MainActivity extends DefaultActivity {
 
     public void selectItem(Fragments type, Map<String, String> params) {
         try {
-            selectItemData(type, params);
+            selectItemData(type, params, false);
         } catch (Exception e) {
             Log.e(TAG, "ERROR:", e);
         }
     }
 
-    private void selectItemData(Fragments type, Map<String, String> params) {
+    private void selectItemData(Fragments type, Map<String, String> params, boolean clearBackStack) {
         Fragment fragment = null;
         switch (type) {
             case BUG_REPORT:
@@ -293,9 +309,13 @@ public class MainActivity extends DefaultActivity {
         }
 
         try {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, fragment, type + "")
-                    .commit();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment, type + "");
+            if (clearBackStack) {
+                transaction.addToBackStack(null);
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+            transaction.commit();
         } catch (Exception e) {
             Log.e(TAG, "ERROR:", e);
         }
@@ -303,11 +323,11 @@ public class MainActivity extends DefaultActivity {
         //TODO: Write normal logic here
         menuListView.setItemChecked(type.getId(), true);
 
-//        try {
-//            setTitle((String) menuListView.getItemAtPosition(type.getId()));
-//        } catch (Exception e) {
-//            Log.e(TAG, "ERROR:", e);
-//        }
+        try {
+            setTitle((String) menuListView.getItemAtPosition(type.getId()));
+        } catch (Exception e) {
+            Log.e(TAG, "ERROR:", e);
+        }
 
         if (drawerLayout != null) drawerLayout.closeDrawer(Gravity.LEFT);
     }

@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import org.rutor.team619.rutorclient.R;
 import org.rutor.team619.rutorclient.app.MainApp;
-import org.rutor.team619.rutorclient.model.settings.ProjectSettings;
+import org.rutor.team619.rutorclient.model.settings.Settings;
 import org.rutor.team619.rutorclient.resource.RuTorRepository;
 import org.rutor.team619.rutorclient.view.activity.MainActivity;
 import org.rutor.team619.rutorclient.view.activity.core.DefaultActivity;
@@ -46,7 +46,7 @@ public class MainPagePlainFragment extends MainPageUnsortedFragmentWithLoading
     @Inject
     MainApp mainApp;
     @Inject
-    ProjectSettings project;
+    Settings project;
 
     @Bind(R.id.main_page_unsorted_content)
     SwipeRefreshLayout contentView;
@@ -163,7 +163,7 @@ public class MainPagePlainFragment extends MainPageUnsortedFragmentWithLoading
     }
 
     @Override
-    public ProjectSettings getProjectSettings() {
+    public Settings getProjectSettings() {
         return project;
     }
 

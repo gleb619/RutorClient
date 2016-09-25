@@ -11,6 +11,7 @@ import org.rutor.team619.rutorclient.model.Group;
 import org.rutor.team619.rutorclient.model.MainGroupedPage;
 import org.rutor.team619.rutorclient.model.Row;
 import org.rutor.team619.rutorclient.service.converter.core.Converter;
+import org.rutor.team619.rutorclient.service.storage.Storage;
 import org.rutor.team619.rutorclient.util.AppUtil;
 import org.rutor.team619.rutorclient.util.Objects;
 
@@ -37,6 +38,23 @@ public class MainPageGroupedConverter extends RowConverter implements Converter<
         return new MainGroupedPage(groups);
     }
 
+    @Override
+    public Class<MainGroupedPage> support() {
+        return MainGroupedPage.class;
+    }
+
+    @Override
+    public Storage<Byte, String> storage() {
+        return null;
+    }
+
+    @Override
+    public String getText() {
+        return null;
+    }
+
+    /* =================== */
+
     @NonNull
     private Group convertToGroup(List<Element> group) {
         int index = 0;
@@ -50,13 +68,6 @@ public class MainPageGroupedConverter extends RowConverter implements Converter<
 
         return new Group(header.text(), rows);
     }
-
-    @Override
-    public Class<MainGroupedPage> support() {
-        return MainGroupedPage.class;
-    }
-
-    /* =================== */
 
     public interface Selectors extends Serializable {
 

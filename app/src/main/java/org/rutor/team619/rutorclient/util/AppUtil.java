@@ -14,7 +14,7 @@ import com.annimon.stream.IntStream;
 import com.annimon.stream.Stream;
 
 import org.rutor.team619.rutorclient.R;
-import org.rutor.team619.rutorclient.model.settings.ProjectSettings;
+import org.rutor.team619.rutorclient.model.settings.Settings;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -41,9 +41,9 @@ public class AppUtil {
 
 
     private final Context context;
-    private final ProjectSettings projectSettings;
+    private final Settings projectSettings;
 
-    public AppUtil(Context context, ProjectSettings projectSettings) {
+    public AppUtil(Context context, Settings projectSettings) {
         this.context = context;
         this.projectSettings = projectSettings;
     }

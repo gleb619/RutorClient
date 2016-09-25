@@ -1,12 +1,12 @@
 package org.rutor.team619.rutorclient.service;
 
-import android.os.Environment;
 import android.util.Log;
 
-import org.rutor.team619.rutorclient.model.settings.ProjectSettings;
+import org.rutor.team619.rutorclient.model.settings.Settings;
 import org.rutor.team619.rutorclient.service.converter.DetailPageConverter;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
@@ -21,32 +21,13 @@ public class WebServer extends NanoHTTPD {
     private static final String TAG = WebServer.class.getName() + ":";
 
     private final String originLocation;
-    private final String pagesDir;
-    private final String jsDir;
-    private final String cssDir;
+    private final FolderService folderService;
 
-    public WebServer(ProjectSettings project) {
+
+    public WebServer(Settings project, FolderService folderService) {
         super(project.getHttpPort());
 
-        String projectDir = new StringBuilder()
-                .append(Environment.getExternalStorageDirectory().getAbsolutePath())
-                .append("/")
-                .append(project.getCacheDir())
-                .append("/")
-                .toString();
-
-        this.pagesDir = new StringBuilder(projectDir)
-                .append(DetailPageConverter.Selectors.PAGE_FOLDER)
-                .append("/")
-                .toString();
-        this.jsDir = new StringBuilder(projectDir)
-                .append(DetailPageConverter.Selectors.JS_FOLDER)
-                .append("/")
-                .toString();
-        this.cssDir = new StringBuilder(projectDir)
-                .append(DetailPageConverter.Selectors.CSS_FOLDER)
-                .append("/")
-                .toString();
+        this.folderService = folderService;
         this.originLocation = project.getUrl() + "/";
     }
 
@@ -54,17 +35,15 @@ public class WebServer extends NanoHTTPD {
         return fileName.substring(fileName.lastIndexOf(separator) + 1, fileName.length());
     }
 
-    @Override
-    public Response serve(IHTTPSession session) {
+    private static void modifyResponse(Response response) {
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Allow-Headers", "*");
+        response.addHeader("Access-Control-Allow-Methods", "*");
+        response.addHeader("Access-Control-Allow-Credentials", "false");
+    }
+
+    private static String readFile(String location) {
         StringBuilder stringBuilder = new StringBuilder();
-        String location = readFolder(session.getUri()) + readName(session.getUri());
-
-        if (location.contains(Variables.FAVICON)) {
-            return new Response(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Not Found");
-        }
-
-        Log.e(TAG, "Work with " + session.getUri());
-
         try {
             // Open file from SD Card, read page
             FileReader index = new FileReader(location);
@@ -80,11 +59,25 @@ public class WebServer extends NanoHTTPD {
             Log.w(TAG, ioe);
         }
 
-        Response response = new Response(Response.Status.OK, readMimeType(session.getUri()), stringBuilder.toString());
-        response.addHeader("Access-Control-Allow-Origin", "*");
-        response.addHeader("Access-Control-Allow-Headers", "*");
-        response.addHeader("Access-Control-Allow-Methods", "*");
-        response.addHeader("Access-Control-Allow-Credentials", "false");
+        return stringBuilder.toString();
+    }
+
+    private static String readName(String fileName) {
+        return readFileExtension(fileName, File.separator);
+    }
+
+    @Override
+    public Response serve(IHTTPSession session) {
+        String location = readFolder(session.getUri()) + readName(session.getUri());
+
+        if (location.contains(Variables.FAVICON)) {
+            return new Response(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "Not Found");
+        }
+
+        Log.e(TAG, "Work with " + session.getUri());
+        String text = readFile(location);
+        Response response = new Response(Response.Status.OK, readMimeType(session.getUri()), text);
+        modifyResponse(response);
 
         return response;
     }
@@ -93,11 +86,11 @@ public class WebServer extends NanoHTTPD {
         String extension = readFileExtension(fileName, ".");
         switch (extension) {
             case DetailPageConverter.Selectors.MIME_TYPE_HTML:
-                return pagesDir;
+                return folderService.pagesDir();
             case DetailPageConverter.Selectors.MIME_TYPE_CSS:
-                return cssDir;
+                return folderService.cssDir();
             case DetailPageConverter.Selectors.MIME_TYPE_JS:
-                return jsDir;
+                return folderService.jsDir();
         }
 
         return originLocation;
@@ -115,10 +108,6 @@ public class WebServer extends NanoHTTPD {
         }
 
         return MIME_PLAINTEXT;
-    }
-
-    private String readName(String fileName) {
-        return readFileExtension(fileName, "/");
     }
 
     public interface Variables extends Serializable {

@@ -63,7 +63,7 @@ h3{
 
 }
 
-.plus{
+#container-floating .plus{
   color: white;
   position: absolute;
   top: 0;
@@ -102,7 +102,7 @@ h3{
   animation-fill-mode: forwards;
 }
 
-.edit{
+#container-floating .edit{
   position: absolute;
   top: 0;
   display: block;
@@ -145,7 +145,7 @@ h3{
     to {opacity: 1; transform: rotateZ(0deg);}
 }
 
-.nds{
+#container-floating .nds{
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -155,7 +155,7 @@ h3{
   cursor: pointer;
 }
 
-.nd1{
+#container-floating .nd1{
   background: #d3a411;
   right: 40px;
   bottom: 120px;
@@ -164,7 +164,7 @@ h3{
   animation-fill-mode:  forwards;
 }
 
-.nd3{
+#container-floating .nd3{
   background: #3c80f6;
   right: 40px;
   bottom: 180px;
@@ -173,7 +173,7 @@ h3{
   animation-fill-mode:  forwards;
 }
 
-.nd4{
+#container-floating .nd4{
   background: #ba68c8;
   right: 40px;
   bottom: 240px;
@@ -182,7 +182,7 @@ h3{
   animation-fill-mode:  forwards;
 }
 
-.nd5{
+#container-floating .nd5{
   background-image: url('https://lh3.googleusercontent.com/-X-aQXHatDQY/Uy86XLOyEdI/AAAAAAAAAF0/TBEZvkCnLVE/w140-h140-p/fb3a11ae-1fb4-4c31-b2b9-bf0cfa835c27');
   background-size: 100%;
   right: 40px;
@@ -218,7 +218,7 @@ h3{
   animation-delay: 0.2s;
 }
 
-.letter{
+#container-floating .letter{
   font-size: 23px;
   font-family: 'Roboto';
   color: white;
@@ -232,7 +232,7 @@ h3{
   line-height: 40px;
 }
 
-.reminder{
+#container-floating .reminder{
   position: absolute;
   left: 0;
   right: 0;
@@ -242,7 +242,7 @@ h3{
   line-height: 40px;
 }
 
-.profile{
+#container-floating .profile{
   border-radius: 50%;
   width: 40px;
   position: absolute;

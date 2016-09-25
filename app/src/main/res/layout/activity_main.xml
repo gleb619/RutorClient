@@ -12,20 +12,26 @@
             layout="@layout/error"
             android:visibility="gone" />
 
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/main_color" >
+
+            <ImageView
+                android:id="@+id/backgroundBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_launcher_black" />
+        </FrameLayout>
 
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:indeterminate="true"
-            android:visibility="gone" />
-
-        <FrameLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/main_color" />
+            android:indeterminate="true" />
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/main_toolbar"

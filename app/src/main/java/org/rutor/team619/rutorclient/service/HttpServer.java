@@ -5,7 +5,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import org.rutor.team619.rutorclient.model.settings.ProjectSettings;
+import org.rutor.team619.rutorclient.model.settings.Settings;
 import org.rutor.team619.rutorclient.service.core.DefaultService;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class HttpServer extends DefaultService {
     private static final String TAG = HttpServer.class.getName() + ":";
 
     @Inject
-    ProjectSettings project;
+    Settings project;
     @Inject
     WebServer server;
 

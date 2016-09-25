@@ -27,7 +27,7 @@ public class ImageDownloaderInstrumentationTest {
 
     @Before
     public void setUp() throws Exception {
-        imageDownloader = new ImageDownloader("", null, commandsExecutor, deviceInformationService);
+//        imageDownloader = new ImageDownloader("", null, commandsExecutor, deviceInformationService);
 
         imageUrl = "file://N:/TEST/RUTOR_PAGE/img/2bb4172ce74b.jpg";
         imageUrl2 = "http://lorempicsum.com/futurama/350/200/1";

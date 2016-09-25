@@ -22,13 +22,13 @@ import com.annimon.stream.Stream;
 import org.rutor.team619.rutorclient.R;
 import org.rutor.team619.rutorclient.app.MainApp;
 import org.rutor.team619.rutorclient.model.TopicDetail;
-import org.rutor.team619.rutorclient.model.settings.ProjectSettings;
+import org.rutor.team619.rutorclient.model.settings.Settings;
 import org.rutor.team619.rutorclient.resource.RuTorRepository;
 import org.rutor.team619.rutorclient.view.activity.MainActivity;
 import org.rutor.team619.rutorclient.view.activity.core.DefaultActivity;
 import org.rutor.team619.rutorclient.view.adapter.MainPageGroupedAdapter;
 import org.rutor.team619.rutorclient.view.adapter.core.DefaultAdapter;
-import org.rutor.team619.rutorclient.view.fragment.core.FragmentWithLoading;
+import org.rutor.team619.rutorclient.view.fragment.core.RefreshableFragment;
 import org.rutor.team619.rutorclient.view.listener.HidingScrollListener;
 import org.rutor.team619.rutorclient.view.other.DefaultViewHolder;
 
@@ -44,7 +44,7 @@ import rx.schedulers.Schedulers;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainPageGroupedFragment extends FragmentWithLoading {
+public class MainPageGroupedFragment extends RefreshableFragment {
 
     private static final String TAG = MainPageGroupedFragment.class.getName() + ":";
 
@@ -53,7 +53,7 @@ public class MainPageGroupedFragment extends FragmentWithLoading {
     @Inject
     MainApp mainApp;
     @Inject
-    ProjectSettings project;
+    Settings project;
 
     @Bind(R.id.main_page_grouped_tab_layout)
     TabLayout tabLayout;
@@ -189,6 +189,7 @@ public class MainPageGroupedFragment extends FragmentWithLoading {
             parameters.put("url", detail.getUrl());
             ((MainActivity) MainPageGroupedFragment.this.getActivity())
                     .selectItem(DefaultActivity.Fragments.DETAIL_PAGE, parameters);
+            showViews();
         };
     }
 
@@ -239,6 +240,12 @@ public class MainPageGroupedFragment extends FragmentWithLoading {
 //        }
     }
 
+
+    @Override
+    public SwipeRefreshLayout getContentView() {
+        return contentView;
+    }
+
     @Override
     public DefaultAdapter getAdapter() {
         return mainPageGroupedAdapter;
@@ -260,7 +267,7 @@ public class MainPageGroupedFragment extends FragmentWithLoading {
     }
 
     @Override
-    public ProjectSettings getProjectSettings() {
+    public Settings getProjectSettings() {
         return project;
     }
 
@@ -289,8 +296,4 @@ public class MainPageGroupedFragment extends FragmentWithLoading {
         return R.layout.fragment_main_page_grouped;
     }
 
-    @Override
-    public void onRefresh() {
-
-    }
 }

@@ -1,11 +1,13 @@
 package org.rutor.team619.rutorclient.view.fragment;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -14,8 +16,9 @@ import android.widget.TextView;
 import org.rutor.team619.rutorclient.R;
 import org.rutor.team619.rutorclient.app.MainApp;
 import org.rutor.team619.rutorclient.model.TopicDetail;
-import org.rutor.team619.rutorclient.model.settings.ProjectSettings;
+import org.rutor.team619.rutorclient.model.settings.Settings;
 import org.rutor.team619.rutorclient.resource.RuTorRepository;
+import org.rutor.team619.rutorclient.service.FolderService;
 import org.rutor.team619.rutorclient.service.ImageDownloader;
 import org.rutor.team619.rutorclient.util.AppUtil;
 import org.rutor.team619.rutorclient.view.adapter.core.DefaultAdapter;
@@ -26,12 +29,16 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import rx.Observable;
 
+import static org.rutor.team619.rutorclient.model.settings.Settings.Code.BRIDGE_NAME;
+import static org.rutor.team619.rutorclient.model.settings.Settings.Code.HIGH_PERFORMANCE_MODE;
+
 /**
  * A placeholder fragment containing a simple view.
  */
 public class DetailPageFragment extends FragmentWithLoading {
 
     private static final String TAG = DetailPageFragment.class.getName() + ":";
+
     @Inject
     RuTorRepository ruTorRepository;
     @Inject
@@ -39,9 +46,12 @@ public class DetailPageFragment extends FragmentWithLoading {
     @Inject
     MainApp mainApp;
     @Inject
-    ProjectSettings project;
+    Settings project;
     @Inject
     AppUtil appUtil;
+    @Inject
+    FolderService folderService;
+
     //    @Bind(R.id.page_detail_content_view)
 //    SwipeRefreshLayout contentView;
     @Bind(R.id.page_detail_browser)
@@ -58,7 +68,7 @@ public class DetailPageFragment extends FragmentWithLoading {
     //    @Bind(R.id.detail_page_toolbar)
     Toolbar toolbar;
 
-    private TopicDetail topicDetalization;
+    private TopicDetail topicDetail;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -70,7 +80,8 @@ public class DetailPageFragment extends FragmentWithLoading {
         webView.clearHistory();
         webView.getSettings().setLoadsImagesAutomatically(true);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(imageDownloader.getWebAppInterface(), "RutorClient");
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.addJavascriptInterface(imageDownloader.getWebAppInterface(), project.value(BRIDGE_NAME));
 
         webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
@@ -78,19 +89,22 @@ public class DetailPageFragment extends FragmentWithLoading {
         webView.setWebViewClient(new MyBrowser());
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setAppCacheEnabled(true);
 
-//        webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
-//
-//        if (Build.VERSION.SDK_INT >= 19) {
-//            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-//        } else {
-//            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-//        }
-//
-//        webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        if (Boolean.TRUE.toString().equals(project.value(HIGH_PERFORMANCE_MODE))) {
+            webView.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
 
-        topicDetalization = new TopicDetail(getArguments());
-        toolbar.setTitle(topicDetalization.getName());
+            if (Build.VERSION.SDK_INT >= 19) {
+                webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+            } else {
+                webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
+
+            webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        }
+
+        topicDetail = new TopicDetail(getArguments());
+        toolbar.setTitle(topicDetail.getName());
 
         //TODO: Hidewrap image direction
         loadData();
@@ -115,12 +129,13 @@ public class DetailPageFragment extends FragmentWithLoading {
     @Override
     public void onStop() {
         imageDownloader.clear();
+
         super.onStop();
     }
 
     @Override
     protected void loadDataProcess() {
-        Observable.defer(() -> ruTorRepository.detailPage(topicDetalization.getId(), topicDetalization.getName()))
+        Observable.defer(() -> ruTorRepository.detailPage(topicDetail.getId(), topicDetail.getName()))
                 .flatMap(appUtil::convert)
                 .subscribe(detailPage -> {
                     showProgress(false);
@@ -151,7 +166,7 @@ public class DetailPageFragment extends FragmentWithLoading {
     }
 
     @Override
-    public ProjectSettings getProjectSettings() {
+    public Settings getProjectSettings() {
         return project;
     }
 
@@ -178,11 +193,6 @@ public class DetailPageFragment extends FragmentWithLoading {
     @Override
     public int resolveLayoutId() {
         return R.layout.fragment_detail;
-    }
-
-    @Override
-    public void onRefresh() {
-        loadData();
     }
 
     /* =================== */

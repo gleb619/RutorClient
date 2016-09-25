@@ -2,6 +2,8 @@ package org.rutor.team619.rutorclient.model;
 
 import org.rutor.team619.rutorclient.model.core.DefaultEntity;
 
+import java.io.File;
+
 /**
  * Created by BORIS on 07.08.2016.
  */
@@ -13,8 +15,8 @@ public final class Caption implements DefaultEntity {
     private final String year;
 
     public Caption(String title, String subtitle, String year) {
-        this.adaptedName = (title != null && title.contains("/")) ? title.split("/")[0] : title;
-        this.originName = (title != null && title.contains("/")) ? title.split("/")[1] : title;
+        this.adaptedName = (title != null && title.contains(File.separator)) ? title.split(File.separator)[0] : title;
+        this.originName = (title != null && title.contains(File.separator)) ? title.split(File.separator)[1] : title;
         this.subtitle = subtitle;
         this.year = year;
     }
@@ -38,7 +40,7 @@ public final class Caption implements DefaultEntity {
         if (adaptedName == null) {
             return originName;
         } else {
-            return adaptedName + "/" + originName;
+            return adaptedName + File.separator + originName;
         }
     }
 

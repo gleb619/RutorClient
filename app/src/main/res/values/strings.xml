@@ -5,10 +5,10 @@
     <string name="action_filter">Фильтр</string>
     <string name="filter_current_data">Test</string>
 
-    <string name="message_no_internet">There is no internet connection</string>
-    <string name="message_no_network">There is no network enabled</string>
-    <string name="message_no_wifi">There is no wifi connection</string>
-    <string name="message_error">Error was detected</string>
+    <string name="message_no_internet">Отсутствует подключение к интернету</string>
+    <string name="message_no_network">Отсутствует сетевое подключение</string>
+    <string name="message_no_wifi">Отсутствует подключение Wi-Fi</string>
+    <string name="message_error">Обнаружена ошибка</string>
 
     <string name="drawer_open">Меню</string>
     <string name="drawer_close">Закрыть</string>
@@ -16,12 +16,16 @@
     <string name="main_page_unsorted_fragment">Main unsorted</string>
     <string name="http_service">Http service</string>
 
-    <string name="instructions_for_interfacing_devices">1) Скачайте клиент на свой локальный компьютер\n\n2) Запустите скаченный клиент\n\n3) Введите следующий номер в текстовае поле и нажмите кнопку \"Save\"\n\n4) Перейдите на любую раздачу и нажмите на к нопку с иконкой \"Загрузка\"\n\n\n\n\n\n%s</string>
+    <string name="instructions_for_interfacing_devices">
+        1) Скачайте клиент на свой локальный компьютер\n\n
+        2) Запустите клиент на своем компьютере\n\n
+        3) Введите номер NNNNNN в текстовае поле и нажмите кнопку \"Сохранить\" на клиенте для локального компьютера\n\n
+        4) Перейдите в телефоне на любую раздачу и нажмите на кнопку с иконкой \"Загрузка\"\n\n\n\n\n\nВаш код: %s</string>
 
     <string-array name="drawer_menu_options">
-        <item>Главная(Вперемешку)</item>
-        <item>Главная(Разделенные по категориям)</item>
-        <item>Сопряжение устройств</item>
+        <item>Все раздачи</item>
+        <item>По категориям</item>
+        <item>Настройка локального компьютера</item>
         <!--
         <item>Топ</item>
         <item>Категории</item>

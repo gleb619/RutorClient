@@ -1,26 +1,20 @@
 package org.rutor.team619.rutorclient.service.helper;
 
 import android.content.res.AssetManager;
-import android.os.Environment;
 import android.util.Log;
 
 import com.annimon.stream.Stream;
 
-import org.rutor.team619.rutorclient.model.settings.ProjectSettings;
+import org.rutor.team619.rutorclient.service.FolderService;
 import org.rutor.team619.rutorclient.service.helper.core.Helper;
 import org.rutor.team619.rutorclient.util.Objects;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 
 /**
  * Created by BORIS on 14.08.2016.
@@ -29,14 +23,15 @@ public class AssetsHelper implements Helper {
 
     private static final String TAG = AssetsHelper.class.getName() + ":";
 
-    private final Reference<AssetManager> assetManager;
-    private final Reference<ProjectSettings> projectSettings;
+    private final AssetManager assetManager;
+    private final FolderService folderService;
 
-    public AssetsHelper(AssetManager assetManager, ProjectSettings project) {
-        this.assetManager = new SoftReference<>(assetManager);
-        this.projectSettings = new SoftReference<>(project);
+    public AssetsHelper(AssetManager assetManager, FolderService folderService) {
+        this.assetManager = assetManager;
+        this.folderService = folderService;
     }
 
+    /*
     private static String getStringFromFile(String filePath) throws Exception {
         File fl = new File(filePath);
         FileInputStream fin = new FileInputStream(fl);
@@ -58,37 +53,20 @@ public class AssetsHelper implements Helper {
 
         return sb.toString();
     }
-
+    */
     @Override
     public void onHelp() throws IOException {
-        String[] files = assetManager.get().list("");
-        if (files == null) {
+        String[] files = assetManager.list("");
+        if (Objects.isNull(files)) {
             return;
         }
-        String projectPath = Environment.getExternalStoragePublicDirectory(
-                projectSettings.get().getCacheDir())
-                .getAbsolutePath();
-
-        String jsPath = new StringBuilder(projectPath)
-                .append(Variables.SEPARATOR)
-                .append(Variables.JS)
-                .append(Variables.SEPARATOR)
-                .toString();
-        String cssPath = new StringBuilder(projectPath)
-                .append(Variables.SEPARATOR)
-                .append(Variables.CSS)
-                .append(Variables.SEPARATOR)
-                .toString();
 
         Stream.of(files)
                 .filter(fileName -> hasExtension(fileName))
                 .peek(fileName -> Log.d(TAG, String.format("Work with %s from assets", fileName)))
-                .map(fileName -> createFile(jsPath, cssPath, fileName))
+                .map(fileName -> createFile(fileName))
                 .filter(file -> Objects.nonNull(file))
                 .forEach(file -> moveFile(file));
-
-        assetManager.clear();
-        projectSettings.clear();
     }
 
     private void moveFile(File file) {
@@ -96,7 +74,7 @@ public class AssetsHelper implements Helper {
         OutputStream out = null;
 
         try {
-            in = assetManager.get().open(file.getName());
+            in = assetManager.open(file.getName());
             out = new FileOutputStream(file);
             copyFile(in, out);
             Log.d(TAG, String.format("Successfully replaced file from assets, new path is %s", file.getCanonicalPath()));
@@ -116,17 +94,20 @@ public class AssetsHelper implements Helper {
         }
     }
 
-    private File createFile(String jsPath, String cssPath, String filename) {
+    private File createFile(String filename) {
         File outFile;
-        if (Variables.JS.equals(parseExtension(filename))) {
-            outFile = new File(jsPath, filename);
-            Log.d(TAG, "Work with js, filename: " + filename);
-        } else if (Variables.CSS.equals(parseExtension(filename))) {
-            outFile = new File(cssPath, filename);
-            Log.d(TAG, "Work with css, filename: " + filename);
-        } else {
-            outFile = null;
-            Log.w(TAG, "Unknown type of filename, file will be skipped, filename: " + filename);
+        String extension = parseExtension(filename);
+
+        switch (extension) {
+            case Variables.JS:
+                outFile = new File(folderService.jsDir(), filename);
+                break;
+            case Variables.CSS:
+                outFile = new File(folderService.cssDir(), filename);
+                break;
+            default:
+                outFile = null;
+                Log.w(TAG, "Unknown type of filename, file will be skipped, filename: " + filename);
         }
 
         if (Objects.nonNull(outFile)) {
@@ -169,7 +150,6 @@ public class AssetsHelper implements Helper {
 
     private interface Variables extends Serializable {
 
-        String SEPARATOR = "/";
         String JS = "js";
         String CSS = "css";
 

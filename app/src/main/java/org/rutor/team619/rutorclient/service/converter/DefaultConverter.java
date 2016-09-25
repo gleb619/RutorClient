@@ -21,7 +21,7 @@ public class DefaultConverter implements Serializable {
 
     private static final String TAG = DefaultConverter.class.getName() + ":";
 
-    protected String readFromFile(String fileName, Context context) {
+    protected static String readFromFile(String fileName, Context context) {
         StringBuilder returnString = new StringBuilder();
         InputStream fIn = null;
         InputStreamReader isr = null;
@@ -53,43 +53,43 @@ public class DefaultConverter implements Serializable {
         return returnString.toString();
     }
 
-    public Boolean escapeHtmlCheck(String input) {
+    public static Boolean escapeHtmlCheck(String input) {
         return escapeHtmlNonEmpty(input).length() > 0;
     }
 
-    public String escapeHtmlNonEmpty(String input) {
+    public static String escapeHtmlNonEmpty(String input) {
         return escapeHtml(input).replaceAll(Patterns.ALL_SPACES, "");
     }
 
-    public Boolean isNull(Object input) {
+    public static Boolean isNull(Object input) {
         return input == null;
     }
 
-    public Boolean isNotNull(Object input) {
+    public static Boolean isNotNull(Object input) {
         return input != null;
     }
 
-    public Boolean isNotNull(String input) {
+    public static Boolean isNotNull(String input) {
         return (input != null && input.replaceAll(Patterns.ALL_SPACES, "").length() > 0);
     }
 
-    public Boolean isNotNull(Collection<?> input) {
+    public static Boolean isNotNull(Collection<?> input) {
         return (input != null && input.size() > 0);
     }
 
-    public Boolean isNotNullAndEquals(Collection<?> input, int size) {
+    public static Boolean isNotNullAndEquals(Collection<?> input, int size) {
         return (isNotNull(input) && input.size() == size);
     }
 
-    public Boolean isNotNullAndNotLess(Collection<?> input, int size) {
+    public static Boolean isNotNullAndNotLess(Collection<?> input, int size) {
         return (isNotNull(input) && input.size() >= size);
     }
 
-    public Boolean isNotNullAndNotMore(Collection<?> input, int size) {
+    public static Boolean isNotNullAndNotMore(Collection<?> input, int size) {
         return (isNotNull(input) && input.size() <= size);
     }
 
-    public String escapeHtml(String input) {
+    public static String escapeHtml(String input) {
         if (input == null) {
             input = "";
         }
@@ -98,7 +98,7 @@ public class DefaultConverter implements Serializable {
         return input;
     }
 
-    public String parseString(String input) {
+    public static String parseString(String input) {
         if (input == null) {
             input = "";
         }
@@ -107,7 +107,7 @@ public class DefaultConverter implements Serializable {
         return input;
     }
 
-    public String parseStringClear(String input) {
+    public static String parseStringClear(String input) {
         if (input == null) {
             input = "";
         }
@@ -118,7 +118,7 @@ public class DefaultConverter implements Serializable {
         return input;
     }
 
-    public Integer parseInteger(String input) {
+    public static Integer parseInteger(String input) {
         Integer output = 0;
         if (input == null) {
             input = "";
@@ -127,13 +127,13 @@ public class DefaultConverter implements Serializable {
         try {
             output = Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            Log.e(TAG, "ERROR: ", e);
+            Log.e(TAG, "ERROR: " + e.getMessage());
         }
 
         return output;
     }
 
-    public double parseDouble(String input) {
+    public static double parseDouble(String input) {
         double output = 0;
         if (input == null) {
             input = "";
@@ -142,13 +142,13 @@ public class DefaultConverter implements Serializable {
         try {
             output = Double.parseDouble(input);
         } catch (NumberFormatException e) {
-            Log.e(TAG, "ERROR: ", e);
+            Log.e(TAG, "ERROR: " + e.getMessage());
         }
 
         return output;
     }
 
-    public Caption parseCaption(String input) {
+    public static Caption parseCaption(String input) {
         Caption output;
         if (input == null) {
             input = "";
@@ -176,7 +176,7 @@ public class DefaultConverter implements Serializable {
         return output;
     }
 
-    public String parseTorrentName(String input) {
+    public static String parseTorrentName(String input) {
         String output = "";
         if (input == null) {
             input = "";
@@ -199,7 +199,7 @@ public class DefaultConverter implements Serializable {
         return output;
     }
 
-    public int parseId(String input) {
+    public static int parseId(String input) {
         int output = 0;
         if (input == null) {
             input = "";
@@ -225,11 +225,11 @@ public class DefaultConverter implements Serializable {
         return Math.abs(output);
     }
 
-    public String capitalize(final String line) {
+    public static String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
-    public String compare(final String text) {
+    public static String compare(final String text) {
         return text.replaceAll(Patterns.ALL_SPACES, "").toLowerCase();
     }
 

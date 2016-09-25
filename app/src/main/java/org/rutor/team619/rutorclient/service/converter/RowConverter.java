@@ -11,7 +11,7 @@ import java.util.List;
  */
 public abstract class RowConverter extends DefaultConverter {
 
-    protected Row parseRow(List<Element> torrentRow) {
+    protected static Row parseRow(List<Element> torrentRow) {
         Row row = null;
 
         if (torrentRow.size() >= 4) {
@@ -36,7 +36,7 @@ public abstract class RowConverter extends DefaultConverter {
         return row;
     }
 
-    protected int parseRowUrls(List<Element> torrentRow, Row row) {
+    protected static int parseRowUrls(List<Element> torrentRow, Row row) {
         int torrentRowIndex = 0;
         row.setCreationDate(torrentRow.get(torrentRowIndex++).text());
         List<Element> captionDetails = torrentRow.get(torrentRowIndex++).getElementsByTag(Selectors.LINK);

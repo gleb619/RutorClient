@@ -1,20 +1,20 @@
 package org.rutor.team619.rutorclient.app;
 
-//import android.support.multidex.MultiDexApplication;
-
+import android.app.Application;
 import android.os.Looper;
-import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
 
 import dagger.ObjectGraph;
 
+//import android.support.multidex.MultiDexApplication;
+
 /**
  * Created by BORIS on 26.07.2015.
  */
-public class MainApp extends MultiDexApplication {
-//public class MainApp extends Application {
+//public class MainApp extends MultiDexApplication {
+public class MainApp extends Application {
 
     private static final String TAG = MainApp.class.getName() + ":";
     private ObjectGraph objectGraph;
@@ -22,22 +22,33 @@ public class MainApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-//        new Runnable() {
-//            @Override
-//            public void run() {
-//                objectGraph = ObjectGraph.create(new AppModule(test()));
-        //        objectGraph = ObjectGraph.create(Arrays.asList(
-        //                new AppModule(this))
-        //                new ModelService(),
-        //                new SecurityService()
-        //        );
-//                objectGraph.inject(this);
-//            }
-//        }.run();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        } else {
+            LeakCanary.install(this);
+        }
+
         objectGraph = ObjectGraph.create(new AppModule(this));
         objectGraph.inject(this);
-        LeakCanary.install(this);
 
+//        if (BuildConfig.DEBUG) {
+//            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                    .detectAll()
+//                    .penaltyLog()
+//                    .build());
+//            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                    .detectAll()
+//                    .penaltyLog()
+//                    .penaltyDeath()
+//                    .build());
+//        }
+
+        changeExceptionHandler();
+    }
+
+    private void changeExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
 
             Log.e(TAG, "uncaughtException#" +
@@ -78,5 +89,4 @@ public class MainApp extends MultiDexApplication {
 
         return null;
     }
-
 }

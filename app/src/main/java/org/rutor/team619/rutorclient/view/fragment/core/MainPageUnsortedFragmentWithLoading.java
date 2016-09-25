@@ -1,7 +1,5 @@
 package org.rutor.team619.rutorclient.view.fragment.core;
 
-import android.support.v4.widget.SwipeRefreshLayout;
-
 import org.rutor.team619.rutorclient.model.MainPlainPage;
 
 import rx.Subscriber;
@@ -11,22 +9,20 @@ import rx.schedulers.Schedulers;
 /**
  * Created by BORIS on 31.10.2015.
  */
-public abstract class MainPageUnsortedFragmentWithLoading extends FragmentWithLoading {
+public abstract class MainPageUnsortedFragmentWithLoading extends RefreshableFragment {
 
     private static final String TAG = MainPageUnsortedFragmentWithLoading.class.getName() + ":";
     private final int PARTIAL_COUNT = 3, PARTIAL_LENGTH = 3;
     private final int PERCENTAGE_MATCH = 60;
 
-    public abstract SwipeRefreshLayout getContentView();
-
-    @Override
-    public void onRefresh() {
-        getContentView().setRefreshing(true);
-        isRunning = false;
-        loadData();
-        getContentView().postDelayed(() ->
-                getContentView().setRefreshing(false), 1000);
-    }
+//    @Override
+//    public void onRefresh() {
+//        getContentView().setRefreshing(true);
+//        isRunning = false;
+//        loadData();
+//        getContentView().postDelayed(() ->
+//                getContentView().setRefreshing(false), 1000);
+//    }
 
     /*
     private int isInteger(String input) {

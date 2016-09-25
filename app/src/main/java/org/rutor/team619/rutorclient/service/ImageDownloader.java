@@ -20,6 +20,7 @@ import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
 import org.rutor.team619.colorthief.ColorThief;
+import org.rutor.team619.rutorclient.R;
 import org.rutor.team619.rutorclient.service.core.Clearable;
 import org.rutor.team619.rutorclient.util.Objects;
 
@@ -88,15 +89,17 @@ public class ImageDownloader implements Clearable {
     }
 
     private void updateToolbarColor(Integer color) {
+        if (Objects.isNull(getToolbar()) || Objects.isNull(getWindow())) {
+            return;
+        }
+
         getToolbar().setBackgroundColor(color);
         getToolbar().getBackground().setAlpha(235);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             int statusBarColor = isColorDark(color) ? ligthenColor(color) : darkenColor(color);
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(statusBarColor);
-                getWindow().setNavigationBarColor(statusBarColor);
-            }
+            getWindow().setStatusBarColor(statusBarColor);
+            getWindow().setNavigationBarColor(statusBarColor);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Window w = getWindow(); // in Activity's onCreate() for instance
@@ -130,6 +133,7 @@ public class ImageDownloader implements Clearable {
         return result;
     }
 
+    //TODO: refactor this part
     private String convertToCssStyles(List<Integer> colors) {
         final int[] index = {0};
         List<String> textRules = Stream.of(colors)
@@ -290,10 +294,20 @@ public class ImageDownloader implements Clearable {
 
     @Override
     public void clear() {
-//        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        clearMargin(toolbar);
-        clearMargin(view);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            clearMargin(toolbar);
+            clearMargin(view);
+        }
+
+        getToolbar().getBackground().setAlpha(255);
+        getWindow().setStatusBarColor(resources.getColor(R.color.primary_dark));
+        getWindow().setNavigationBarColor(resources.getColor(R.color.primary_dark));
+        getToolbar().setBackgroundColor(resources.getColor(R.color.primary));
+        getToolbar().setTitle(resources.getString(R.string.app_name));
 
         toolbar = null;
         window = null;

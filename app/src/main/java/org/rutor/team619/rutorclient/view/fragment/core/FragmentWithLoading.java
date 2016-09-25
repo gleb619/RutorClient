@@ -3,15 +3,10 @@ package org.rutor.team619.rutorclient.view.fragment.core;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.DownloadManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
@@ -20,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.rutor.team619.rutorclient.R;
-import org.rutor.team619.rutorclient.model.settings.ProjectSettings;
+import org.rutor.team619.rutorclient.model.settings.Settings;
 import org.rutor.team619.rutorclient.resource.RuTorRepository;
 import org.rutor.team619.rutorclient.util.Objects;
 import org.rutor.team619.rutorclient.view.adapter.core.DefaultAdapter;
@@ -30,7 +25,7 @@ import retrofit.RetrofitError;
 /**
  * Created by BORIS on 12.11.2015.
  */
-public abstract class FragmentWithLoading extends InjectableFragment implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class FragmentWithLoading extends InjectableFragment {
 
     private static final String TAG = FragmentWithLoading.class.getName() + ":";
     protected volatile boolean isRunning = false;
@@ -66,21 +61,6 @@ public abstract class FragmentWithLoading extends InjectableFragment implements 
 //            this.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             this.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         }
-    }
-
-    protected void onFileDownloading(String url) {
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-
-        request.allowScanningByMediaScanner();
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); //Notify client once download is completed!
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "Name of your downloadble file goes here, example: Mathematics II ");
-        DownloadManager dm = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-        dm.enqueue(request);
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT); //This is important!
-        intent.addCategory(Intent.CATEGORY_OPENABLE); //CATEGORY.OPENABLE
-        intent.setType("*/*");//any application,any extension
-        Toast.makeText(getContext().getApplicationContext(), "Downloading File", //To notify the Client that the file is being downloaded
-                Toast.LENGTH_LONG).show();
     }
 
     protected void loadData() {
@@ -131,22 +111,22 @@ public abstract class FragmentWithLoading extends InjectableFragment implements 
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
             getMainPane().setVisibility(show ? View.GONE : View.VISIBLE);
-            getMainPane().animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    getMainPane().setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
+            getMainPane().animate().setDuration(shortAnimTime).alpha(show ? 0 : 1)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            getMainPane().setVisibility(show ? View.GONE : View.VISIBLE);
+                        }
+                    });
 
             getProgressView().setVisibility(show ? View.VISIBLE : View.GONE);
-            getProgressView().animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    getProgressView().setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
+            getProgressView().animate().setDuration(shortAnimTime).alpha(show ? 1 : 0)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            getProgressView().setVisibility(show ? View.VISIBLE : View.GONE);
+                        }
+                    });
         } else {
             getProgressView().setVisibility(show ? View.VISIBLE : View.GONE);
             getMainPane().setVisibility(show ? View.GONE : View.VISIBLE);
@@ -154,7 +134,7 @@ public abstract class FragmentWithLoading extends InjectableFragment implements 
 
         if (show) {
             final Handler handler = new Handler();
-            handler.postDelayed(() -> isRunning = show, 1000);
+            handler.postDelayed(() -> isRunning = show, 500);
         } else {
             isRunning = show;
         }
@@ -203,22 +183,22 @@ public abstract class FragmentWithLoading extends InjectableFragment implements 
         }
     }
 
-    public abstract View getMainPane();
+    protected abstract View getMainPane();
 
-    public abstract View getProgressView();
+    protected abstract View getProgressView();
 
     public abstract Context getContext();
 
-    public abstract RuTorRepository getRepository();
+    protected abstract RuTorRepository getRepository();
 
-    public abstract ProjectSettings getProjectSettings();
+    protected abstract Settings getProjectSettings();
 
-    public abstract DefaultAdapter getAdapter();
+    protected abstract DefaultAdapter getAdapter();
 
-    public abstract View getErrorPane();
+    protected abstract View getErrorPane();
 
-    public abstract TextView getErrorPaneStackTrace();
+    protected abstract TextView getErrorPaneStackTrace();
 
-    public abstract ImageView getErrorType();
+    protected abstract ImageView getErrorType();
 
 }

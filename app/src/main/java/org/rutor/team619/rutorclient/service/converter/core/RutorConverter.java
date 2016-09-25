@@ -28,12 +28,7 @@ public class RutorConverter implements Converter {
     private static final String TAG = RutorConverter.class.getName() + ":";
     private final Map<Class<?>, org.rutor.team619.rutorclient.service.converter.core.Converter> converters = new HashMap<>();
 
-    public RutorConverter() {
-
-    }
-
     public RutorConverter(org.rutor.team619.rutorclient.service.converter.core.Converter... converterList) {
-        this();
         for (org.rutor.team619.rutorclient.service.converter.core.Converter converter : converterList) {
             converters.put(converter.support(), converter);
         }
@@ -63,7 +58,7 @@ public class RutorConverter implements Converter {
     private Object work(TypedInput body, Type type) throws ConversionException {
         Document document;
         try {
-            document = Jsoup.parse(inputStreamTOString(body.in()));
+            document = Jsoup.parse(inputStreamToString(body.in()));
         } catch (IOException e) {
             throw new ConversionException(e);
         }
@@ -84,7 +79,7 @@ public class RutorConverter implements Converter {
         }
     }
 
-    private String inputStreamTOString(InputStream inputStream) throws IOException {
+    private String inputStreamToString(InputStream inputStream) throws IOException {
         if (inputStream == null) {
             return "";
         }
